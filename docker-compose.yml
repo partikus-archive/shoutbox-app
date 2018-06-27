@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+
+  websockets:
+    build: docker/php
+    command: bin/console app:shoutbox
+    links:
+      - maria:maria
+    working_dir: /app/backend
+    volumes:
+      - .:/app
+
+  frontend:
+    image: kkarczmarczyk/node-yarn
+    entrypoint: docker/node/entrypoint.sh
+    working_dir: /app
+    volumes:
+      - .:/app
+
+  webserver:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    links:
+      - websockets:websockets
+      - frontend:frontend
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+  maria:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: shoutbox
+      MYSQL_DATABASE: shoutbox
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/mariadb:/docker-entrypoint-initdb.d/
