@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  composer:
+    build: docker/php
+    command: composer install
+    working_dir: /app/backend
+    volumes:
+      - .:/app
+
+  yarn:
+    image: kkarczmarczyk/node-yarn
+    entrypoint: yarn install
+    working_dir: /app/frontend
+    volumes:
+      - .:/app

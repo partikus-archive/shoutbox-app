@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   websockets:
     build: docker/php
     command: bin/console app:shoutbox
@@ -13,8 +12,8 @@ services:
 
   frontend:
     image: kkarczmarczyk/node-yarn
-    entrypoint: docker/node/entrypoint.sh
-    working_dir: /app
+    entrypoint: yarn start
+    working_dir: /app/frontend
     volumes:
       - .:/app
 
